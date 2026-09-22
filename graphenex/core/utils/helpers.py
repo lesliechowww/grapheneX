@@ -114,20 +114,21 @@ def get_modules():
 
     current_os = "win" if check_os() else "linux"
     json_data = get_mod_json()
-    return_dict = dict()
-    available_modules = list()
+    return_dict = {}
+
     for namespace, modlist in json_data.items():
         if namespace == "presets":
             continue
-        for module in modlist:
-            module['namespace'] = namespace
-            if module['target_os'] == current_os:
-                return_dict[module['namespace']] = dict()
-                available_modules.append(module)
 
-        for module in available_modules:
-            return_dict[module['namespace']
-                        ][module['name']] = HardenMethod(**module)
+        namespace_modules = {}
+        for module in modlist:
+            module["namespace"] = namespace
+            if module["target_os"] == current_os:
+                namespace_modules[module["name"]] = HardenMethod(**module)
+
+        if namespace_modules:
+            return_dict[namespace] = namespace_modules
+
     return return_dict
 
 
